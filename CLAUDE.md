@@ -50,6 +50,17 @@ Low priority: agent reasoning, verbose discussion, intermediate exploration.
 - **Rabbit holes** — large effort, little evidence of progress.
 - **Attention debt** — `requests made − requests completed`. Always visible.
 
+## Recency: live vs dormant (don't quote stale work as if it's now)
+A session being inside the 24h window does **not** make it current. Always read each stream's
+real last-activity time (file mtime + the last genuine user-message timestamp) and bucket it:
+- **Live** — touched within roughly the last cycle or two. Show in the main view, present tense.
+- **Dormant** — still ≤24h but quiet for hours (no real activity). Move to a separate, dimmed
+  "Dormant" section with an explicit "last active <time> · ~Nh ago" stamp. Do **not** restate its
+  next-action in the present tense or imply it's in motion; describe it as "state as of then."
+- **Out of window / done** — past 24h or finished: archive it.
+Every row carries its age. Never let a workstream that hasn't moved in hours keep appearing as
+if it's happening now — that's the #1 way this dashboard lies. When in doubt, check the timestamp.
+
 ## Scope rules
 - Monitor **active + recently-active (≤24h)** real-project sessions and their git activity.
 - **NEVER monitor your own session or this monitor's own repo** (the directory you run from).

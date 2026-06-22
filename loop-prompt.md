@@ -20,6 +20,8 @@ state.json schema:
   `label` is a short human-readable name (3–4 words from the goal, e.g. "Auth token refactor") —
   this is what the dashboard shows; the raw session id appears only as a small dimmed tag.
   Keep a stream's label stable across cycles unless its goal genuinely changes.
+  `lastActivity` (optional) records when the stream was really last worked (not just file-touched);
+  set it whenever a stream goes quiet so the dashboard can show its age and bucket it as dormant.
 changelog.json schema (array, append-only):
   { cycle, ts, stream, kind, text }   kind ∈ new | progress | blocked | resolved |
                                        drift | forgotten | validated | note
@@ -53,6 +55,9 @@ changelog.json schema (array, append-only):
    - Then: 2-line exec summary · stat strip · goals · ≤5 next actions.
    - Active workstreams COLLAPSED by default; expand reveals per-stream facts + condensed
      chain of actions & thought + one-line gist. Mark each stream with a "changed this cycle" dot.
+   - Split LIVE from DORMANT: streams with no real activity for hours go in a separate dimmed
+     "Dormant" section, each with a "last active <time> · ~Nh ago" stamp; keep their copy in the
+     past tense ("state as of then"). Never present a dormant stream's next-action as if live.
    - Refer to every stream by its human `label` (not its session id) in the change feed, lists,
      and headers; render the raw session id only as a small dimmed tag for disambiguation.
    - GROUP workstreams by repo: when a repo has >1 active session/worktree, show them under
