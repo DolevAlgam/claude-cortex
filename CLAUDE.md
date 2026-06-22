@@ -36,7 +36,8 @@ Low priority: agent reasoning, verbose discussion, intermediate exploration.
 
 ## Scope rules
 - Monitor **active + recently-active (≤24h)** real-project sessions and their git activity.
-- **NEVER monitor your own session or the `claude-monitor` repo.** You are infrastructure, not a workstream.
+- **NEVER monitor your own session or this monitor's own repo** (the directory you run from).
+  You are infrastructure, not a workstream.
 - Ignore throwaway temp/eval/unit-test session dirs (paths under `/T/`, `eval-`, `unit-`, `detector-trace-`).
 - Personal/non-engineering tracks (legal, finance) still count if the user is actively working them.
 
@@ -44,7 +45,8 @@ Low priority: agent reasoning, verbose discussion, intermediate exploration.
 The user reads this **over and over**. Optimize for *spotting the change since last time*, not re-reading everything.
 
 1. **Diff-first.** Top of page = "What changed since last cycle" — new/changed/resolved items only.
-   Persist `state.json` each cycle; diff against it. If nothing changed, say so loudly.
+   Persist `state.json` each cycle (per-stream snapshot keyed by a stable id, with a `lastMtime`
+   marker per stream); diff against it. If nothing changed, say so loudly.
 2. **Newest is colored.** Changes from the most recent cycle are highlighted (accent/glow);
    older entries fade to muted grey. Recency = color intensity. The page should read like a
    scrollable feed with the freshest thought lit up at the top.

@@ -71,8 +71,23 @@ This is a prompt-driven agent loop, not a binary — it runs **inside Claude Cod
 
 The dashboard auto-opens in your browser after each cycle.
 
-> **Paths:** the runbook references absolute paths under the repo. If you clone
-> elsewhere, update the paths in `loop-prompt.dm` (or the kickoff prompt) to match.
+## First-time setup
+
+It's designed to be **clone-and-go** — paths are relative to the repo root (your working
+directory), and session discovery uses the universal `~/.claude/projects/` location. There
+is no required config. A few optional tweaks:
+
+- **Run from the repo root.** The agent writes `dashboard.html` / `state.json` /
+  `changelog.json` into its current working directory, so launch Claude Code there.
+- **OS open command.** The runbook auto-opens the dashboard with `open` (macOS); on Linux
+  it uses `xdg-open`, on Windows `start`. No action needed unless your setup differs.
+- **Cadence.** Change `15m` in the `/loop` command to whatever interval you want.
+- **Scope.** By default it watches every real-project session active in the last 24h and
+  skips this monitor's own repo + throwaway temp/eval dirs. Adjust the scope rules in
+  `CLAUDE.md` if you want to narrow or widen what's tracked.
+
+The state/changelog schema is documented inline at the top of `loop-prompt.dm`. The first
+cycle creates these files; every later cycle diffs against them.
 
 ---
 

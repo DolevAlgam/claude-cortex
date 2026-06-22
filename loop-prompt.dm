@@ -4,25 +4,33 @@ Goal of every cycle: update work-state awareness and regenerate dashboard.html a
 DIFF-FIRST, scrollable thought-log where the newest changes are colored and instantly
 spottable. Terse. Glance-first, dive on demand. Do no engineering work.
 
-## State files (in /Users/dolev/Repos/claude-monitor/)
-- state.json     — last cycle's snapshot: per-workstream {status, done[], blocked[], openQs[],
-                   nextAction, valStatus, lastHash} + cycle number + timestamp.
-- changelog.json — append-only feed of change events: {cycle, ts, stream, kind, text}
-                   kind ∈ new | progress | blocked | resolved | drift | forgotten | validated | note.
-On first run these may not exist — create them.
+## Paths (all relative to the repo root = your current working directory)
+- ./state.json      — last cycle's snapshot (see schema below).
+- ./changelog.json  — append-only feed of change events.
+- ./dashboard.html  — the regenerated output.
+- ~/.claude/projects/  — where Claude Code stores all session transcripts (universal).
+On first run the state/changelog/dashboard files won't exist — create them.
+
+state.json schema:
+  { cycle, ts, streams: { <id>: { title, status, done[], blocked[], openQs[],
+    nextAction, valStatus, lastMtime } } }
+changelog.json schema (array, append-only):
+  { cycle, ts, stream, kind, text }   kind ∈ new | progress | blocked | resolved |
+                                       drift | forgotten | validated | note
 
 ## Steps
 1. DISCOVER sessions: list ~/.claude/projects/*/ . Keep only real-project dirs modified ≤24h.
-   EXCLUDE: the claude-monitor dir/session (never monitor yourself) and any temp/eval/unit/
-   detector-trace dirs (paths containing /T/, eval-, unit-, detector-trace-).
+   EXCLUDE: this monitor's OWN repo + session (the dir you're running from — never monitor
+   yourself) and any throwaway dirs (paths containing /T/, eval-, unit-, detector-trace-).
 2. READ NEW CONTENT ONLY: for each active session, parse just the tail / what's new since
-   state.json's lastHash or timestamp. Pull user messages (intent/corrections/frustration),
+   state.json's lastMtime or timestamp. Pull user messages (intent/corrections/frustration),
    key decisions, and a condensed action+thought chain. Don't re-read whole histories.
-3. GIT per active repo (skip claude-monitor): branch, recent commits (with times), uncommitted
+3. GIT per active repo (skip your own): branch, recent commits (with times), uncommitted
    changes, anything new since last cycle.
 4. DIFF vs state.json: for each workstream compute what's new / progressed / resolved / newly
    blocked / drifting / forgotten. Append every delta to changelog.json with this cycle's number.
-   If a prior blocker or forgotten item is now done, emit a `resolved` event.
+   If a prior blocker or forgotten item is now done, emit a `resolved` event. If an unverified
+   item survives multiple cycles, escalate its tone (don't let it quietly disappear).
 5. REGENERATE dashboard.html per the design law in CLAUDE.md:
    - Top = CHANGE FEED: this cycle's deltas first, COLORED/glowing; older cycles below, faded by age.
      It should read like a thought log you scroll, newest lit up. If nothing changed since last
@@ -35,7 +43,8 @@ On first run these may not exist — create them.
      (Tailwind + Alpine + Lucide via CDN), dark, no build step.
    - Stamp the cycle number + timestamp in the header.
 6. WRITE state.json (new snapshot) and the appended changelog.json.
-7. OPEN the dashboard: run `open /Users/dolev/Repos/claude-monitor/dashboard.html` every cycle.
+7. OPEN the dashboard in the browser (every cycle). Use the right command for the OS:
+     macOS: open ./dashboard.html   ·   Linux: xdg-open ./dashboard.html   ·   Windows: start dashboard.html
 
 ## Per workstream determine
 Goal · Why it matters · Status · Done · In-progress · Blocked · Open questions · Validation status · Next action.
