@@ -1,0 +1,17 @@
+# Generated artifacts — contain PRIVATE session/work data. Never commit.
+dashboard.html
+state.json
+changelog.json
+
+# Local Claude Code runtime/session state
+.claude/
+
+# OS / editor cruft
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Local scratch
+/tmp/
+*.local
