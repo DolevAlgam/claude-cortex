@@ -35,7 +35,7 @@ Three plain files drive everything:
 | File | Role |
 |------|------|
 | `CLAUDE.md` | **Charter** — who the agent is, principles, scope rules, the dashboard design law. |
-| `loop-prompt.dm` | **Per-cycle runbook** — the exact steps to run each cycle. |
+| `loop-prompt.md` | **Per-cycle runbook** — the exact steps to run each cycle. |
 | *(generated)* | `dashboard.html`, `state.json`, `changelog.json` — the output + persisted state. |
 
 Each cycle the agent:
@@ -64,8 +64,8 @@ This is a prompt-driven agent loop, not a binary — it runs **inside Claude Cod
    becomes the agent's instructions.
 3. Kick off a recurring loop (15-minute cadence shown):
    ```
-   /loop 15m Run ONE AI Brain Monitor cycle. Read CLAUDE.md and loop-prompt.dm, then
-   execute exactly what loop-prompt.dm says.
+   /loop 15m Run ONE AI Brain Monitor cycle. Read CLAUDE.md and loop-prompt.md, then
+   execute exactly what loop-prompt.md says.
    ```
    Or run a single cycle on demand by pasting the runbook prompt.
 
@@ -86,7 +86,7 @@ is no required config. A few optional tweaks:
   skips this monitor's own repo + throwaway temp/eval dirs. Adjust the scope rules in
   `CLAUDE.md` if you want to narrow or widen what's tracked.
 
-The state/changelog schema is documented inline at the top of `loop-prompt.dm`. The first
+The state/changelog schema is documented inline at the top of `loop-prompt.md`. The first
 cycle creates these files; every later cycle diffs against them.
 
 ---
