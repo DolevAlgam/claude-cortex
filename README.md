@@ -58,7 +58,7 @@ This is a prompt-driven agent loop, not a binary — it runs **inside Claude Cod
 
 1. Clone into a directory Claude Code can see (the agent reads/writes files here):
    ```bash
-   git clone <your-fork> claude-monitor && cd claude-monitor
+   git clone https://github.com/DolevAlgam/claude-cortex.git && cd claude-cortex
    ```
 2. Open Claude Code with this repo as the working directory. The `CLAUDE.md` here
    becomes the agent's instructions.
