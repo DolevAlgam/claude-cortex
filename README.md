@@ -1,104 +1,39 @@
 # 🧠 AI Brain Monitor
 
-**A Chief of Staff for every Claude Code session on your machine.**
-
-Run many Claude Code sessions at once and you lose the plot — what's shipping, what's
-blocked, what you asked for three hours ago that never got done. AI Brain Monitor is a
-self-contained agent loop that watches **all** your active Claude Code sessions and git
-repos, and regenerates a single **diff-first dashboard** you can glance at in seconds.
-
-It doesn't write features. It preserves **work state**: what's happening, why, what
-changed since last time, what's stuck, and what to do next.
-
----
-
-## What it gives you
-
-- **A scrollable thought-log.** The dashboard's hero is a change feed — the newest
-  deltas glow at the top, older ones fade by age. You see *what moved since last cycle*
-  without re-reading anything.
-- **Glance, then dive.** Compact by default; every workstream expands into a condensed
-  **chain of actions & thought** plus facts (done / blocked / open / validation).
-- **Active signal detection.** Forgotten requests, repeated attempts, work drift,
-  validation gaps, rabbit holes, and **attention debt** (`requests made − completed`).
-- **Aging risks get louder.** An unverified fix that survives multiple cycles escalates
-  in the feed instead of quietly disappearing.
-
-It tracks engineering *and* non-engineering threads (anything you're actively working).
-
----
+Watches your active Claude Code sessions and regenerates a diff-first `dashboard.html`:
+what shipped, what's blocked, what you asked for and never got, what to do next. It
+tracks work state — it doesn't write code.
 
 ## How it works
 
-Three plain files drive everything:
+- `CLAUDE.md` — agent identity, scope rules, dashboard design law.
+- `loop-prompt.md` — the steps run each cycle.
 
-| File | Role |
-|------|------|
-| `CLAUDE.md` | **Charter** — who the agent is, principles, scope rules, the dashboard design law. |
-| `loop-prompt.md` | **Per-cycle runbook** — the exact steps to run each cycle. |
-| *(generated)* | `dashboard.html`, `state.json`, `changelog.json` — the output + persisted state. |
-
-Each cycle the agent:
-
-1. Discovers active real-project sessions in `~/.claude/projects/` modified ≤24h
-   (excluding itself and throwaway temp/eval dirs).
-2. Reads **only what's new** since the last cycle + recent git activity per repo.
-3. **Diffs** against `state.json`, appends every delta to `changelog.json`.
-4. Regenerates `dashboard.html` (newest changes lit, older faded).
-5. Writes new state and opens the dashboard.
-
-State persistence is what makes the diff work: cycle *N* compares against cycle *N−1*,
-so the feed only lights up genuine change.
-
----
+Each cycle: discover sessions in `~/.claude/projects/` active in the last 24h, read
+what's new since last cycle, diff against `state.json`, append deltas to
+`changelog.json`, regenerate and open `dashboard.html`. Cycle *N* diffs against *N−1*.
 
 ## Quick start
 
-This is a prompt-driven agent loop, not a binary — it runs **inside Claude Code**.
+Runs inside Claude Code.
 
-1. Clone into a directory Claude Code can see (the agent reads/writes files here):
-   ```bash
-   git clone https://github.com/DolevAlgam/claude-cortex.git && cd claude-cortex
-   ```
-2. Open Claude Code with this repo as the working directory. The `CLAUDE.md` here
-   becomes the agent's instructions.
-3. Kick off a recurring loop (15-minute cadence shown):
-   ```
-   /loop 15m Run ONE AI Brain Monitor cycle. Read CLAUDE.md and loop-prompt.md, then
-   execute exactly what loop-prompt.md says.
-   ```
-   Or run a single cycle on demand by pasting the runbook prompt.
+```bash
+git clone https://github.com/DolevAlgam/claude-cortex.git && cd claude-cortex
+```
 
-The dashboard auto-opens in your browser after each cycle.
+Open Claude Code here, then:
 
-## First-time setup
+```
+/loop 15m Run ONE AI Brain Monitor cycle. Read CLAUDE.md and loop-prompt.md, then
+execute exactly what loop-prompt.md says.
+```
 
-It's designed to be **clone-and-go** — paths are relative to the repo root (your working
-directory), and session discovery uses the universal `~/.claude/projects/` location. There
-is no required config. A few optional tweaks:
-
-- **Run from the repo root.** The agent writes `dashboard.html` / `state.json` /
-  `changelog.json` into its current working directory, so launch Claude Code there.
-- **OS open command.** The runbook auto-opens the dashboard with `open` (macOS); on Linux
-  it uses `xdg-open`, on Windows `start`. No action needed unless your setup differs.
-- **Cadence.** Change `15m` in the `/loop` command to whatever interval you want.
-- **Scope.** By default it watches every real-project session active in the last 24h and
-  skips this monitor's own repo + throwaway temp/eval dirs. Adjust the scope rules in
-  `CLAUDE.md` if you want to narrow or widen what's tracked.
-
-The state/changelog schema is documented inline at the top of `loop-prompt.md`. The first
-cycle creates these files; every later cycle diffs against them.
-
----
+Change `15m` for a different cadence; adjust scope in `CLAUDE.md`.
 
 ## Privacy
 
-The generated files (`dashboard.html`, `state.json`, `changelog.json`) summarize the
-contents of your real sessions — they **will** contain private project, code, and
-personal details. They are **gitignored by default**. Don't commit them. Only the
-charter and runbook (both generic) are tracked.
-
----
+`dashboard.html`, `state.json`, `changelog.json` contain private session details. They're
+gitignored — don't commit them.
 
 ## License
 

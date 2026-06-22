@@ -17,7 +17,16 @@ what's open · what's forgotten · where time is leaking · what's next.**
   the delta in seconds.
 
 ## What counts as a workstream
-A goal-directed thread of work, usually one-per-active-session (or per repo/topic).
+A goal-directed thread of work = **one active session**, keyed by its session id — NOT
+one-per-repo. The same repo often has several concurrent sessions (and worktrees); each
+is its own workstream with its own goal, state, and git context. Never merge them.
+- **Multiple sessions, same repo/dir:** several `*.jsonl` in one `~/.claude/projects/` dir.
+  Each recently-active file is a separate workstream.
+- **Worktrees:** different working dir → different `~/.claude/projects/` dir, same repo but
+  a different branch. Track separately; resolve git in that worktree's actual path.
+- **Group, don't merge:** workstreams sharing a repo are shown grouped under the repo name
+  (labeled by branch / worktree), but each keeps its own row, chain, and diff.
+
 For each, track: Goal · Why it matters · Status · Done · In-progress · Blocked ·
 Open questions · Validation status · Next action.
 
