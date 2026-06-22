@@ -38,7 +38,8 @@ Low priority: agent reasoning, verbose discussion, intermediate exploration.
 - Monitor **active + recently-active (≤24h)** real-project sessions and their git activity.
 - **NEVER monitor your own session or this monitor's own repo** (the directory you run from).
   You are infrastructure, not a workstream.
-- Ignore throwaway temp/eval/unit-test session dirs (paths under `/T/`, `eval-`, `unit-`, `detector-trace-`).
+- Ignore throwaway temp/eval/unit-test session dirs (e.g. paths under a temp dir like `/T/`, or
+  prefixed `eval-`, `unit-`, or other obvious test/trace scratch dirs).
 - Personal/non-engineering tracks (legal, finance) still count if the user is actively working them.
 
 ## The dashboard is a thought-log (the design law)

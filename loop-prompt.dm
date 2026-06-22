@@ -21,7 +21,8 @@ changelog.json schema (array, append-only):
 ## Steps
 1. DISCOVER sessions: list ~/.claude/projects/*/ . Keep only real-project dirs modified ≤24h.
    EXCLUDE: this monitor's OWN repo + session (the dir you're running from — never monitor
-   yourself) and any throwaway dirs (paths containing /T/, eval-, unit-, detector-trace-).
+   yourself) and any throwaway test/scratch dirs (e.g. a temp path like /T/, or prefixes
+   like eval-, unit-, or other obvious test/trace scratch dirs).
 2. READ NEW CONTENT ONLY: for each active session, parse just the tail / what's new since
    state.json's lastMtime or timestamp. Pull user messages (intent/corrections/frustration),
    key decisions, and a condensed action+thought chain. Don't re-read whole histories.
