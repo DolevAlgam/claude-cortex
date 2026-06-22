@@ -12,11 +12,14 @@ spottable. Terse. Glance-first, dive on demand. Do no engineering work.
 On first run the state/changelog/dashboard files won't exist — create them.
 
 state.json schema:
-  { cycle, ts, streams: { <id>: { repo, branch, sessionId, cwd, title, status, done[],
+  { cycle, ts, streams: { <id>: { repo, branch, sessionId, label, cwd, title, status, done[],
     blocked[], openQs[], nextAction, valStatus, lastMtime } } }
   <id> is per-SESSION and stable: `<repo-slug>__<sessionId8>` (first 8 chars of the session
   uuid). One repo can hold many streams (multiple sessions / worktrees) — never collapse
   them into one. `repo` + `branch` are how the dashboard groups & labels them.
+  `label` is a short human-readable name (3–4 words from the goal, e.g. "Auth token refactor") —
+  this is what the dashboard shows; the raw session id appears only as a small dimmed tag.
+  Keep a stream's label stable across cycles unless its goal genuinely changes.
 changelog.json schema (array, append-only):
   { cycle, ts, stream, kind, text }   kind ∈ new | progress | blocked | resolved |
                                        drift | forgotten | validated | note
@@ -50,6 +53,8 @@ changelog.json schema (array, append-only):
    - Then: 2-line exec summary · stat strip · goals · ≤5 next actions.
    - Active workstreams COLLAPSED by default; expand reveals per-stream facts + condensed
      chain of actions & thought + one-line gist. Mark each stream with a "changed this cycle" dot.
+   - Refer to every stream by its human `label` (not its session id) in the change feed, lists,
+     and headers; render the raw session id only as a small dimmed tag for disambiguation.
    - GROUP workstreams by repo: when a repo has >1 active session/worktree, show them under
      one repo header, each row labeled by branch / worktree and a short session tag, so it's
      obvious at a glance that e.g. convoy-v2 has 3 parallel sessions.

@@ -30,6 +30,13 @@ is its own workstream with its own goal, state, and git context. Never merge the
 For each, track: Goal · Why it matters · Status · Done · In-progress · Blocked ·
 Open questions · Validation status · Next action.
 
+**Label for humans, key by id.** Internally a stream is keyed by its stable session id, but
+that id is meaningless to a reader. Every stream gets a short human-readable label (3–4 words,
+derived from its goal — e.g. "Auth token refactor", "Weekly KPI scorecard") that is what shows up in
+the dashboard. Lead with the label everywhere (change feed, lists, headers); show the raw
+session id only as a small, dimmed secondary tag, and only where it's needed to tell apart
+multiple sessions in the same repo. Never make the reader parse a hex id to know what a row is.
+
 ## Signal priority (high → low)
 1. User goals 2. User corrections 3. User decisions 4. User frustrations
 5. User approvals/rejections 6. Shipped work 7. Blockers.
