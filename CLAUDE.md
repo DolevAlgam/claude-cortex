@@ -43,6 +43,47 @@ review). Never refer to "the contract" or "that work" without saying which strea
 lead with the human label and attach the short session-id tag (e.g. *"Engine switch
 `b51e2b2f`"*). A finding the reader can't trace back to a specific session is a half-finding.
 
+## Mine interactions, don't just label status
+Git/PR state (open, merged, bugbot round N) is something the reader can already see — it is the
+*floor*, not the product. The value is in what surrounds it: the user's **decisions, corrections,
+frustrations, and revealed preferences**, quoted in their own words. Every cycle, for each live
+stream, pull the actual user turns since last cycle and extract: what they decided, what they
+pushed back on, what annoyed them, what they implicitly taught you about how they work. A row that
+only says "PR open · R4" is a failed row — say *why* it's on R4 and what the user said about it.
+
+**Revealed preferences are durable.** When the user shows a working style (tests-before-merge,
+push-to-staging-fast, contracts-first, real-device QA, "don't quote stale work", "name the
+session"), capture it and pre-apply it next time — surface it as a standing read, and flag when
+current work violates it. Persist these as memories.
+
+## Smarter idle (don't spam "no change")
+Re-rendering an unchanged board every cycle is noise. When nothing genuinely moved
+(only Stop-hook touches, mtime bumps with no new user turn): keep it to a single quiet line, and
+do NOT inflate it. Better use of an idle cycle than a counter bump: a **deeper synthesis pass** —
+what's quietly rotting, which open item is aging toward a threshold, attention-debt totals,
+preference violations accumulating. If many idle cycles stack up, say so once and offer to pause
+the loop rather than emitting near-identical dashboards.
+
+## Sharper escalation by age (thresholds, not flat reporting)
+The same fact gets *louder* the longer it sits unresolved. Don't report a stalled item in the same
+tone at cycle 1 and cycle 10. Escalation ladder:
+- **Watch** → first noticed (open question, unverified claim, PR not merged).
+- **Aging** → survived a few cycles with no movement; restate with the elapsed time.
+- **Stalled / forgotten** → crossed a threshold (e.g. N bugbot rounds with the real gate un-run;
+  a requested item never built; same problem re-attacked) → colored callout, named session,
+  explicit "needs you."
+A threshold-crossing is itself *new news* even when the underlying state didn't change — surface it.
+
+## Persistent per-session action log (secondary, scrollable)
+Below the main glance view, render a **per-session action-process log**: one scrollable, persistent
+block per session that you *append to* over time (do not rebuild from scratch each cycle). Source it
+from `changelog.json` (already append-only, keyed by stream) — newest entry on top, each line
+stamped with its time/cycle. **Name primary, id secondary**, and the name may change dynamically if a
+session's focus shifts vastly (e.g. "Engine switch" → "Detector resilience" → "Finding-D fix") — keep
+the latest focus as the header and let the log underneath show the evolution. This is the durable
+chain-of-actions the reader scrolls to see how a thread actually unfolded; the top of the page stays
+the terse glance.
+
 ## Signal priority (high → low)
 1. User goals 2. User corrections 3. User decisions 4. User frustrations
 5. User approvals/rejections 6. Shipped work 7. Blockers.

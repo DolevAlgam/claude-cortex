@@ -15,3 +15,7 @@ changelog.json
 # Local scratch
 /tmp/
 *.local
+
+# Per-cycle authored dashboard content — PRIVATE
+cycle_top.py
+__pycache__/

@@ -72,6 +72,21 @@ changelog.json schema (array, append-only):
      one repo header, each row labeled by branch / worktree and a short session tag, so it's
      obvious at a glance that e.g. convoy-v2 has 3 parallel sessions.
    - Completed · Stuck/Validation-Gaps at the bottom.
+   - MINE INTERACTIONS, don't just label status: for each live stream pull the actual user turns
+     since last cycle and surface decisions / corrections / frustrations / revealed preferences in
+     the user's words — not just "PR open · bugbot R4". A status-only row is a failed row.
+   - SHARPER ESCALATION by age: the same unresolved fact gets louder over cycles
+     (watch → aging-with-elapsed-time → stalled/forgotten colored callout). A threshold-crossing
+     (N bugbot rounds with the real gate un-run, a requested item never built/validated) is itself
+     new news — surface it even if the underlying state didn't change.
+   - SMARTER IDLE: if nothing genuinely moved (only Stop-hook touches / mtime bumps, no new user
+     turn), keep it to one quiet line — do not spam a full re-render. Use a stacked-idle cycle for a
+     synthesis pass (what's rotting, aging items, attention-debt totals) and offer to pause the loop.
+   - PERSISTENT PER-SESSION ACTION LOG (secondary, below the glance view): for each session render a
+     scrollable, persistent block of its action-process — sourced from changelog.json filtered by
+     that stream (append-only; newest on top; each line time/cycle-stamped). Name is the header
+     (dynamic — may change if the session's focus shifts vastly), session id a small dimmed tag.
+     This is the durable chain the reader scrolls; keep the top of the page the terse glance.
    - Keep ALL copy terse — fragments, not paragraphs. Self-contained single HTML
      (Tailwind + Alpine + Lucide via CDN), dark, no build step.
    - Stamp the cycle number + timestamp in the header.
