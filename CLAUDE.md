@@ -37,13 +37,25 @@ the dashboard. Lead with the label everywhere (change feed, lists, headers); sho
 session id only as a small, dimmed secondary tag, and only where it's needed to tell apart
 multiple sessions in the same repo. Never make the reader parse a hex id to know what a row is.
 
+**Always name the session you're talking about.** This holds everywhere — the dashboard *and*
+any direct answer, finding, or recommendation you give the user (e.g. an ad-hoc lookup or a
+review). Never refer to "the contract" or "that work" without saying which stream it belongs to:
+lead with the human label and attach the short session-id tag (e.g. *"Engine switch
+`b51e2b2f`"*). A finding the reader can't trace back to a specific session is a half-finding.
+
 ## Signal priority (high → low)
 1. User goals 2. User corrections 3. User decisions 4. User frustrations
 5. User approvals/rejections 6. Shipped work 7. Blockers.
 Low priority: agent reasoning, verbose discussion, intermediate exploration.
 
 ## Always detect
-- **Forgotten requests** — asked for, never completed/validated.
+- **Forgotten requests** — asked for, never completed/validated. **This is the highest-value
+  thing this monitor does — emphasize it.** Anything the user explicitly asked for, or any
+  load-bearing fact/decision they established in chat, that then dropped out of the work (never
+  built, never validated, missing from the doc/PR it should be in) gets surfaced *loudly* — a
+  dedicated, colored callout naming the session, not a buried line. When you review an artifact
+  against a conversation, diff what was agreed vs what landed and call out every gap. Escalate
+  tone the longer something stays forgotten; never let it quietly age out.
 - **Repeated attempts** — same problem re-attacked without measurable progress.
 - **Work drift** — effort diverging from the stated goal.
 - **Validation gaps** — claims/fixes/implementations not verified.
@@ -60,6 +72,12 @@ real last-activity time (file mtime + the last genuine user-message timestamp) a
 - **Out of window / done** — past 24h or finished: archive it.
 Every row carries its age. Never let a workstream that hasn't moved in hours keep appearing as
 if it's happening now — that's the #1 way this dashboard lies. When in doubt, check the timestamp.
+
+**Be time-aware in everything you say.** Always know the current time and each stream's real
+last-activity time, and make the gap explicit — "~6 min ago", "~21h ago", "since last cycle".
+Convert relative references to concrete stamps. Order by recency. Quoting an old message as if
+it's the live state — without its age — is a failure even outside the dashboard (e.g. in a
+direct answer). Time and age are not decoration; they are how the reader trusts the report.
 
 ## Scope rules
 - Monitor **active + recently-active (≤24h)** real-project sessions and their git activity.

@@ -60,6 +60,14 @@ changelog.json schema (array, append-only):
      past tense ("state as of then"). Never present a dormant stream's next-action as if live.
    - Refer to every stream by its human `label` (not its session id) in the change feed, lists,
      and headers; render the raw session id only as a small dimmed tag for disambiguation.
+     ALWAYS name the session a statement is about — in the dashboard AND in any direct answer to
+     the user (label + short id tag). Never say "the contract / that work" without its stream.
+   - Put FORGOTTEN things front and center: anything the user asked for, or any load-bearing
+     fact/decision they established in chat, that then dropped out (unbuilt, unvalidated, or
+     missing from the doc/PR it belongs in) gets its own colored callout naming the session —
+     not a buried line. Escalate tone the longer it stays forgotten.
+   - Be time-aware: stamp the current time, and for every stream make the age explicit
+     ("~Nm ago", "since cycle N"). Convert relative phrases to concrete times; order by recency.
    - GROUP workstreams by repo: when a repo has >1 active session/worktree, show them under
      one repo header, each row labeled by branch / worktree and a short session tag, so it's
      obvious at a glance that e.g. convoy-v2 has 3 parallel sessions.
