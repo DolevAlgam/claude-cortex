@@ -35,6 +35,13 @@ changelog.json schema (array, append-only):
    repo appear as separate project dirs (different path) — same repo, different branch.
    For each session, recover its real working dir from the `cwd` field inside the transcript
    (decoding the dir name is lossy for worktrees) and its `sessionId` for the stable stream id.
+   RE-SCAN COMPREHENSIVELY, don't just diff: do NOT rely on "files changed since last cycle"
+   (mtime) to find what's live — that misses active sessions and is fooled by hook/mtime touches.
+   Enumerate ALL ≤24h sessions, compute each one's REAL last-user-message timestamp (store as an
+   absolute epoch), then reconcile with state.json: add new, update existing, and ARCHIVE any whose
+   real activity is now >24h or that are done. A file touched with no new user/assistant turn since
+   last cycle is "touch-only", not activity. Drop archived streams from the live Stories view (keep
+   them in the action log + a count).
    EXCLUDE: this monitor's OWN repo + session (the dir you're running from — never monitor
    yourself) and any throwaway test/scratch dirs (e.g. a temp path like /T/, or prefixes
    like eval-, unit-, or other obvious test/trace scratch dirs).

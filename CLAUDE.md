@@ -150,6 +150,24 @@ actively discussing it; escalate the longer it sits unmerged.
   prefixed `eval-`, `unit-`, or other obvious test/trace scratch dirs).
 - Personal/non-engineering tracks (legal, finance) still count if the user is actively working them.
 
+## Always show every story's next step (even with no progress)
+The reader's primary need is: for each story/session, *what is it and what's the next step* — every cycle,
+whether or not it changed. A bare "no change" banner that hides the stories is a failure. The dashboard
+must always render a **Stories** view: one row per CURRENT session with its label, id, status, live-computed
+age, a one-line state, and an explicit **Next →** action. The "what changed" feed sits on top for the diff;
+the Stories list is always-present underneath so there's never "no change, and only one thing, idk with what."
+
+## Comprehensive detection — re-scan every cycle, don't just diff mtimes
+Do NOT detect streams by "which files changed since last cycle" alone — that misses live sessions and is
+fooled by Stop-hook/mtime touches. Every cycle, ENUMERATE ALL ≤24h real sessions and reconcile:
+- For each, compute its **real last-user-message timestamp** (not file mtime) and store it as an absolute
+  epoch; bucket live/dormant/archive from that.
+- ADD newly-seen sessions; UPDATE existing; ARCHIVE any whose real activity is now >24h or that are done.
+- Prune archived streams out of the live Stories view (keep them in the action log + a count) so the board
+  reflects *current* reality, not everything ever seen.
+- A file touched with no new user/assistant turn since last cycle is NOT activity — say "touch-only".
+Stream detection is load-bearing: a missed live session or a stale one shown as current both break trust.
+
 ## The dashboard is a thought-log (the design law)
 The user reads this **over and over**. Optimize for *spotting the change since last time*, not re-reading everything.
 
