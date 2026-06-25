@@ -29,7 +29,7 @@ changelog.json schema (array, append-only):
                                        drift | forgotten | validated | note
 
 ## Steps
-1. DISCOVER sessions: enumerate EACH `~/.claude/projects/*/*.jsonl` modified ≤24h — every
+1. DISCOVER sessions: enumerate EACH `~/.claude/projects/*/*.jsonl` modified ≤12h — every
    such file is a distinct session = a distinct workstream. A single project dir with N
    recent transcripts = N workstreams; do NOT keep only the newest. Worktrees of the same
    repo appear as separate project dirs (different path) — same repo, different branch.
@@ -37,9 +37,9 @@ changelog.json schema (array, append-only):
    (decoding the dir name is lossy for worktrees) and its `sessionId` for the stable stream id.
    RE-SCAN COMPREHENSIVELY, don't just diff: do NOT rely on "files changed since last cycle"
    (mtime) to find what's live — that misses active sessions and is fooled by hook/mtime touches.
-   Enumerate ALL ≤24h sessions, compute each one's REAL last-user-message timestamp (store as an
+   Enumerate ALL ≤12h sessions, compute each one's REAL last-user-message timestamp (store as an
    absolute epoch), then reconcile with state.json: add new, update existing, and ARCHIVE any whose
-   real activity is now >24h or that are done. A file touched with no new user/assistant turn since
+   real activity is now >12h or that are done. A file touched with no new user/assistant turn since
    last cycle is "touch-only", not activity. Drop archived streams from the live Stories view (keep
    them in the action log + a count).
    EXCLUDE: this monitor's OWN repo + session (the dir you're running from — never monitor

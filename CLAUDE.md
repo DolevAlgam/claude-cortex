@@ -104,13 +104,13 @@ Low priority: agent reasoning, verbose discussion, intermediate exploration.
 - **Attention debt** — `requests made − requests completed`. Always visible.
 
 ## Recency: live vs dormant (don't quote stale work as if it's now)
-A session being inside the 24h window does **not** make it current. Always read each stream's
+A session being inside the 12h window does **not** make it current. Always read each stream's
 real last-activity time (file mtime + the last genuine user-message timestamp) and bucket it:
 - **Live** — touched within roughly the last cycle or two. Show in the main view, present tense.
-- **Dormant** — still ≤24h but quiet for hours (no real activity). Move to a separate, dimmed
+- **Dormant** — still ≤12h but quiet for hours (no real activity). Move to a separate, dimmed
   "Dormant" section with an explicit "last active <time> · ~Nh ago" stamp. Do **not** restate its
   next-action in the present tense or imply it's in motion; describe it as "state as of then."
-- **Out of window / done** — past 24h or finished: archive it.
+- **Out of window / done** — past 12h or finished: archive it.
 Every row carries its age. Never let a workstream that hasn't moved in hours keep appearing as
 if it's happening now — that's the #1 way this dashboard lies. When in doubt, check the timestamp.
 
@@ -143,7 +143,7 @@ Strictly read-only — never fetch-mutate, push, merge, or check out. Surface an
 actively discussing it; escalate the longer it sits unmerged.
 
 ## Scope rules
-- Monitor **active + recently-active (≤24h)** real-project sessions and their git activity.
+- Monitor **active + recently-active (≤12h)** real-project sessions and their git activity.
 - **NEVER monitor your own session or this monitor's own repo** (the directory you run from).
   You are infrastructure, not a workstream.
 - Ignore throwaway temp/eval/unit-test session dirs (e.g. paths under a temp dir like `/T/`, or
@@ -159,10 +159,10 @@ the Stories list is always-present underneath so there's never "no change, and o
 
 ## Comprehensive detection — re-scan every cycle, don't just diff mtimes
 Do NOT detect streams by "which files changed since last cycle" alone — that misses live sessions and is
-fooled by Stop-hook/mtime touches. Every cycle, ENUMERATE ALL ≤24h real sessions and reconcile:
+fooled by Stop-hook/mtime touches. Every cycle, ENUMERATE ALL ≤12h real sessions and reconcile:
 - For each, compute its **real last-user-message timestamp** (not file mtime) and store it as an absolute
   epoch; bucket live/dormant/archive from that.
-- ADD newly-seen sessions; UPDATE existing; ARCHIVE any whose real activity is now >24h or that are done.
+- ADD newly-seen sessions; UPDATE existing; ARCHIVE any whose real activity is now >12h or that are done.
 - Prune archived streams out of the live Stories view (keep them in the action log + a count) so the board
   reflects *current* reality, not everything ever seen.
 - A file touched with no new user/assistant turn since last cycle is NOT activity — say "touch-only".
