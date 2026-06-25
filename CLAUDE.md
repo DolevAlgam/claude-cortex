@@ -120,6 +120,28 @@ Convert relative references to concrete stamps. Order by recency. Quoting an old
 it's the live state — without its age — is a failure even outside the dashboard (e.g. in a
 direct answer). Time and age are not decoration; they are how the reader trusts the report.
 
+**NEVER store or trust a relative age — recompute it every cycle from an absolute timestamp.**
+A persisted string like `"~1h ago"` is frozen the moment you write it and is a lie by the next
+cycle. State must hold the **absolute** last-activity time (epoch / ISO); every cycle, derive the
+"~N ago" fresh as `now − stored_timestamp`. If a row shows an age, you must have recomputed it this
+cycle against the real clock — never carry forward a prior cycle's relative phrase. (This exact bug
+shipped once: a loan stream stored "~1h ago" at one cycle and still read "~1h ago" a full day later,
+when it was really ~26h and out of window. Recompute, don't copy.)
+
+## Cross-check git, don't trust the transcript alone (catch merge-waiting work)
+A session's transcript can go quiet while its real deliverable sits in git **waiting to merge** — a
+pushed branch with an open PR, a feature branch ahead of origin, an un-merged worktree. These are
+high-signal (work that's done-ish but not landed) and the transcript may never mention them again.
+Every cycle, run **read-only** git/gh to detect them, in each tracked repo/worktree:
+- `git -C <dir> branch -vv` / `git worktree list` — feature branches + their worktrees.
+- `git -C <dir> for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads` — ahead/behind.
+- `git -C <dir> log --oneline origin/<base>..<branch>` — commits not yet in the base branch.
+- `git -C <dir> merge-base --is-ancestor <branch> origin/<base>` — is it merged yet? (your merge truth.)
+- If `gh` is available: `gh pr list --state open` (read-only) — open PRs, their checks/mergeable state.
+Strictly read-only — never fetch-mutate, push, merge, or check out. Surface anything that's
+**pushed/PR-open but not merged** as a "waiting to merge" item with its age, even if no session is
+actively discussing it; escalate the longer it sits unmerged.
+
 ## Scope rules
 - Monitor **active + recently-active (≤24h)** real-project sessions and their git activity.
 - **NEVER monitor your own session or this monitor's own repo** (the directory you run from).

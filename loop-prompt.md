@@ -20,8 +20,10 @@ state.json schema:
   `label` is a short human-readable name (3–4 words from the goal, e.g. "Auth token refactor") —
   this is what the dashboard shows; the raw session id appears only as a small dimmed tag.
   Keep a stream's label stable across cycles unless its goal genuinely changes.
-  `lastActivity` (optional) records when the stream was really last worked (not just file-touched);
-  set it whenever a stream goes quiet so the dashboard can show its age and bucket it as dormant.
+  `lastActivity` records when the stream was really last worked (not just file-touched). Store it as
+  an ABSOLUTE time (epoch or ISO) — NOT a relative phrase like "~1h ago". Relative ages are frozen
+  lies the moment they're written; recompute "~N ago" every cycle from `now − lastActivity`. (Real
+  bug: a stream stored "~1h ago" and still showed it ~26h later, out of window. Recompute, never copy.)
 changelog.json schema (array, append-only):
   { cycle, ts, stream, kind, text }   kind ∈ new | progress | blocked | resolved |
                                        drift | forgotten | validated | note
@@ -44,6 +46,13 @@ changelog.json schema (array, append-only):
    Run git in the session's resolved `cwd` — two sessions in different worktrees of one repo
    have different branches and different uncommitted state; report each separately. (Use
    `git -C <cwd> rev-parse --abbrev-ref HEAD` etc., or `git worktree list` to map them.)
+   CROSS-CHECK GIT FOR MERGE-WAITING WORK (read-only) — a session can go quiet while its deliverable
+   sits in git waiting to land. Detect it independent of the transcript: `branch -vv` /
+   `worktree list`; `for-each-ref ... %(upstream:track)` for ahead/behind; `log origin/<base>..<branch>`
+   for unmerged commits; `merge-base --is-ancestor <branch> origin/<base>` for merge truth; and
+   `gh pr list --state open` if available. Surface anything pushed/PR-open-but-not-merged as a
+   "waiting to merge" item with its age; escalate the longer it sits. STRICTLY read-only — never
+   push, merge, fetch-mutate, or checkout.
 4. DIFF vs state.json: for each workstream compute what's new / progressed / resolved / newly
    blocked / drifting / forgotten. Append every delta to changelog.json with this cycle's number.
    If a prior blocker or forgotten item is now done, emit a `resolved` event. If an unverified
