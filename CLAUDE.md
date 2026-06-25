@@ -40,8 +40,8 @@ multiple sessions in the same repo. Never make the reader parse a hex id to know
 **Always name the session you're talking about.** This holds everywhere — the dashboard *and*
 any direct answer, finding, or recommendation you give the user (e.g. an ad-hoc lookup or a
 review). Never refer to "the contract" or "that work" without saying which stream it belongs to:
-lead with the human label and attach the short session-id tag (e.g. *"Engine switch
-`b51e2b2f`"*). A finding the reader can't trace back to a specific session is a half-finding.
+lead with the human label and attach the short session-id tag (e.g. *"Auth token refactor
+`a1b2c3d4`"*). A finding the reader can't trace back to a specific session is a half-finding.
 
 ## Mine interactions, don't just label status
 Git/PR state (open, merged, bugbot round N) is something the reader can already see — it is the
@@ -79,7 +79,7 @@ Below the main glance view, render a **per-session action-process log**: one scr
 block per session that you *append to* over time (do not rebuild from scratch each cycle). Source it
 from `changelog.json` (already append-only, keyed by stream) — newest entry on top, each line
 stamped with its time/cycle. **Name primary, id secondary**, and the name may change dynamically if a
-session's focus shifts vastly (e.g. "Engine switch" → "Detector resilience" → "Finding-D fix") — keep
+session's focus shifts vastly (e.g. "Login bug" → "Auth refactor" → "Session-store migration") — keep
 the latest focus as the header and let the log underneath show the evolution. This is the durable
 chain-of-actions the reader scrolls to see how a thread actually unfolded; the top of the page stays
 the terse glance.

@@ -86,7 +86,7 @@ changelog.json schema (array, append-only):
      ("~Nm ago", "since cycle N"). Convert relative phrases to concrete times; order by recency.
    - GROUP workstreams by repo: when a repo has >1 active session/worktree, show them under
      one repo header, each row labeled by branch / worktree and a short session tag, so it's
-     obvious at a glance that e.g. convoy-v2 has 3 parallel sessions.
+     obvious at a glance that e.g. one repo has 3 parallel sessions.
    - Completed · Stuck/Validation-Gaps at the bottom.
    - MINE INTERACTIONS, don't just label status: for each live stream pull the actual user turns
      since last cycle and surface decisions / corrections / frustrations / revealed preferences in
